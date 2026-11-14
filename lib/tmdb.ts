@@ -34,14 +34,20 @@ export async function getTrendingMovies(): Promise<MediaItem[]> {
   try {
     const res = await fetch(
       `${TMDB_BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}&language=id-ID`,
-      { next: { revalidate: 3600 } }
+      {
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(5000),
+      }
     );
 
     if (!res.ok) {
       // Try english language if indonesian fails
       const fallbackRes = await fetch(
         `${TMDB_BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}&language=en-US`,
-        { next: { revalidate: 3600 } }
+        {
+          next: { revalidate: 3600 },
+          signal: AbortSignal.timeout(5000),
+        }
       );
       if (!fallbackRes.ok) return MOCK_TRENDING_MOVIES;
       const data = await fallbackRes.json();
@@ -64,13 +70,19 @@ export async function getTrendingTv(): Promise<MediaItem[]> {
   try {
     const res = await fetch(
       `${TMDB_BASE_URL}/trending/tv/week?api_key=${TMDB_API_KEY}&language=id-ID`,
-      { next: { revalidate: 3600 } }
+      {
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(5000),
+      }
     );
 
     if (!res.ok) {
       const fallbackRes = await fetch(
         `${TMDB_BASE_URL}/trending/tv/week?api_key=${TMDB_API_KEY}&language=en-US`,
-        { next: { revalidate: 3600 } }
+        {
+          next: { revalidate: 3600 },
+          signal: AbortSignal.timeout(5000),
+        }
       );
       if (!fallbackRes.ok) return MOCK_TRENDING_TV;
       const data = await fallbackRes.json();

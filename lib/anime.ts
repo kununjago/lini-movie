@@ -2,20 +2,23 @@ import { AnimeItem, MediaItem } from '@/types';
 import { MOCK_ANIME_LIST, MOCK_ANIME_DETAILS } from './mock-data';
 
 const JIKAN_BASE_URL = 'https://api.jikan.moe/v4';
+const FETCH_TIMEOUT_MS = 5000; // Timeout 5 detik agar build/request tidak hang jika Jikan API lambat/down
 
 export async function getTopAnime(): Promise<MediaItem[]> {
   try {
     const res = await fetch(`${JIKAN_BASE_URL}/top/anime?limit=15&filter=bypopularity`, {
-      next: { revalidate: 86400 } // cache for 1 day
+      next: { revalidate: 86400 }, // cache for 1 day
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
-      return MOCK_ANIME_LIST;
+      console.warn(`Jikan API responded with status ${res.status}`);
+      return [];
     }
 
     const json = await res.json();
     if (!json.data || !Array.isArray(json.data)) {
-      return MOCK_ANIME_LIST;
+      return [];
     }
 
     return json.data.map((item: any) => ({
@@ -31,8 +34,8 @@ export async function getTopAnime(): Promise<MediaItem[]> {
       genres: item.genres?.map((g: any) => ({ id: g.mal_id, name: g.name })) || []
     }));
   } catch (error) {
-    console.error('Error fetching top anime from Jikan:', error);
-    return MOCK_ANIME_LIST;
+    console.error('Error fetching top anime from Jikan (fallback to []):', error);
+    return [];
   }
 }
 
@@ -41,7 +44,8 @@ export async function getAnimeDetails(malId: string | number): Promise<AnimeItem
 
   try {
     const res = await fetch(`${JIKAN_BASE_URL}/anime/${malId}/full`, {
-      next: { revalidate: 86400 }
+      next: { revalidate: 86400 },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -93,13 +97,12 @@ export async function searchAnime(query: string): Promise<MediaItem[]> {
 
   try {
     const res = await fetch(`${JIKAN_BASE_URL}/anime?q=${encodeURIComponent(query)}&limit=8`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!res.ok) {
-      return MOCK_ANIME_LIST.filter((a) =>
-        a.title.toLowerCase().includes(query.toLowerCase())
-      );
+      return [];
     }
 
     const json = await res.json();
@@ -118,9 +121,7 @@ export async function searchAnime(query: string): Promise<MediaItem[]> {
     }));
   } catch (error) {
     console.error('Error searching anime:', error);
-    return MOCK_ANIME_LIST.filter((a) =>
-      a.title.toLowerCase().includes(query.toLowerCase())
-    );
+    return [];
   }
 }
 
