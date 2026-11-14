@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import StickyAd from "@/components/StickyAd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +34,12 @@ export default function RootLayout({
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} dark scroll-smooth`}
     >
-      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-slate-950 font-sans antialiased">
+      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-slate-950 font-sans antialiased pb-20 sm:pb-24">
         <Navbar />
         <main className="flex-1 w-full">{children}</main>
         <Footer />
+        {/* Sticky banner iklan A-Ads menempel permanen di bagian bawah layar tanpa tombol close */}
+        <StickyAd position="bottom" adUnitId="2462042" closable={false} />
       </body>
     </html>
   );

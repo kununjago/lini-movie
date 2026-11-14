@@ -1,9 +1,10 @@
 import React from 'react';
 import HeroBanner from '@/components/HeroBanner';
 import MediaRow from '@/components/MediaRow';
+import FixedAd from '@/components/FixedAd';
 import { getTrendingMovies, getTrendingTv } from '@/lib/tmdb';
 import { getTopAnime } from '@/lib/anime';
-import { Film, Tv, Sparkles, Flame } from 'lucide-react';
+import { Tv, Sparkles, Flame } from 'lucide-react';
 
 export const revalidate = 3600; // ISR 1 hour
 
@@ -32,6 +33,11 @@ export default async function HomePage() {
           items={trendingMovies}
           icon={<Flame className="w-6 h-6 text-sky-400" />}
         />
+
+        {/* Slot Iklan Banner Permanen (A-Ads) di Halaman Utama */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FixedAd adUnitId="2462042" />
+        </div>
 
         {/* TV Shows Row */}
         <MediaRow

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, RotateCw, ExternalLink, ShieldCheck, Film, Volume2, Sparkles } from 'lucide-react';
+import { RotateCw, ShieldCheck } from 'lucide-react';
+import FixedAd from '@/components/FixedAd';
 
 interface VideoPlayerProps {
   type: 'movie' | 'tv' | 'anime';
@@ -131,6 +132,9 @@ export default function VideoPlayer({
         </div>
         <span className="hidden md:inline font-mono text-[11px] text-sky-400/80">1080p Full HD</span>
       </div>
+
+      {/* Fixed Ad Permanen (A-Ads) di bawah pemutar video */}
+      <FixedAd adUnitId="2462042" />
     </div>
   );
 }
