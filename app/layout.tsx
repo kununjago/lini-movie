@@ -34,6 +34,12 @@ export default function RootLayout({
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} dark scroll-smooth`}
     >
+      <head>
+        <meta
+          name="google-site-verification"
+          content="33BlawfG3xDhnT7UCpEtCpl6QiAozHYErjhpydvyBSw"
+        />
+      </head>
       <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-slate-950 font-sans antialiased pb-20 sm:pb-24">
         <Navbar />
         <main className="flex-1 w-full">{children}</main>
